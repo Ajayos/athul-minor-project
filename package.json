@@ -1,0 +1,26 @@
+{
+  "name": "athul-minor-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ajayos/athul-minor-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ajayos/athul-minor-project/issues"
+  },
+  "homepage": "https://github.com/Ajayos/athul-minor-project#readme",
+  "dependencies": {
+    "@ajayos/nodedb": "^1.1.0",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "sqlite3": "^5.1.7"
+  }
+}

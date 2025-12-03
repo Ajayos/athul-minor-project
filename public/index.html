@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Parking System</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 0;
+    }
+
+    header {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 30px 20px;
+        color: #fff;
+        text-align: center;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border-bottom: 3px solid #00d4ff;
+    }
+
+    header span {
+        color: #00d4ff;
+    }
+
+    nav {
+        background: rgba(22, 33, 62, 0.95);
+        padding: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    nav a, nav button {
+        color: #e0e1dd;
+        padding: 11px 28px;
+        background: linear-gradient(135deg, #0077b6, #00a8e8);
+        border-radius: 25px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+    }
+
+    nav a:hover, nav button:hover {
+        background: linear-gradient(135deg, #00a8e8, #00d4ff);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+    }
+
+    .hidden { display: none !important; }
+
+    .container {
+        max-width: 600px;
+        background: rgba(255, 255, 255, 0.95);
+        margin: 40px auto;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.5s ease-out;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container h2 {
+        color: #1a1a2e;
+        font-size: 28px;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .container h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+
+    label {
+        display: block;
+        margin-top: 20px;
+        color: #1a1a2e;
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 14px;
+        margin-top: 8px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 15px;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: #667eea;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 25px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+    }
+
+    button:active {
+        transform: translateY(-1px);
+    }
+
+    .message {
+        margin-top: 15px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        min-height: 20px;
+    }
+
+    .section-title {
+        margin-top: 35px;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    .slots {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .slot {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 16px;
+        background: linear-gradient(135deg, #00d4ff, #0099cc);
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        border: 2px solid transparent;
+    }
+
+    .slot:hover:not(.booked) { 
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
+    }
+
+    .booked { 
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f) !important;
+        cursor: not-allowed;
+        opacity: 0.7;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3) !important;
+    }
+
+    .user-slot { 
+        background: linear-gradient(135deg, #4ecdc4, #44b3a6) !important;
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3) !important;
+    }
+
+    .selected-slot { 
+        outline: 3px solid #ffd700;
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5) !important;
+    }
+
+    .selected-info {
+        background: linear-gradient(135deg, #f5f7fa, #e9ecef);
+        padding: 20px;
+        border-radius: 12px;
+        margin: 25px 0;
+        border-left: 4px solid #667eea;
+    }
+
+    .selected-info h3 {
+        color: #1a1a2e;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .selected-info p {
+        color: #667eea;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .cost-breakdown {
+        background: linear-gradient(135deg, #f5f7fa, #e9ecef);
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+        border-left: 4px solid #4ecdc4;
+    }
+
+    .cost-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        color: #1a1a2e;
+        font-weight: 500;
+    }
+
+    .cost-item:last-child {
+        padding-top: 12px;
+        border-top: 2px solid #ddd;
+        font-size: 18px;
+        font-weight: 700;
+        color: #667eea;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            margin: 20px;
+            padding: 25px;
+        }
+
+        header {
+            font-size: 24px;
+            padding: 20px;
+        }
+
+        nav {
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a, nav button {
+            padding: 9px 20px;
+            font-size: 13px;
+        }
+    }
+</style>
+
+</head>
+<body>
+
+<header>🚗 <span>Parking</span> Hub</header>
+
+<nav>
+    <a id="navLogin" onclick="showPage('loginPage')">Login</a>
+    <a id="navSignup" onclick="showPage('signupPage')">Signup</a>
+    <button id="navLogout" class="hidden" onclick="logout()">Logout</button>
+</nav>
+
+<!-- LOGIN PAGE -->
+<div class="container" id="loginPage">
+    <h2>Welcome Back</h2>
+    <label>User ID</label>
+    <input id="login_id" placeholder="Enter your user ID" type="text">
+    <label>Password</label>
+    <input id="login_password" type="password" placeholder="Enter your password">
+    <button onclick="login()">Login</button>
+    <div class="message" id="login_msg"></div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div class="container hidden" id="signupPage">
+    <h2>Create Account</h2>
+    <label>User ID</label>
+    <input id="signup_id" placeholder="Choose a user ID" type="text">
+    <label>Password</label>
+    <input id="signup_password" type="password" placeholder="Create a password">
+    <label>Vehicle Type</label>
+    <select id="signup_vehicle">
+        <option value="2W">🏍️ 2 Wheeler</option>
+        <option value="4W">🚗 4 Wheeler</option>
+    </select>
+    <button onclick="signup()">Create Account</button>
+    <div class="message" id="signup_msg"></div>
+</div>
+
+<!-- SLOTS PAGE -->
+<div class="container hidden" id="slotPage">
+    <h2>Available Slots</h2>
+
+    <div class="section-title">🏍️ 2 Wheeler Slots</div>
+    <div id="slot2w" class="slots"></div>
+
+    <div class="section-title">🚗 4 Wheeler Slots</div>
+    <div id="slot4w" class="slots"></div>
+
+    <div class="selected-info">
+        <h3>Selected Slot</h3>
+        <p id="selectedSlot">None</p>
+    </div>
+
+    <button onclick="bookSlot()">Book Slot</button>
+    <button onclick="releaseSlot()" style="background: linear-gradient(135deg, #f85032, #e73c1d);">Release Slot</button>
+
+    <div class="message" id="slot_msg"></div>
+</div>
+
+<script>
+let userId = null;
+let selectedSlot = null;
+const API = "http://localhost:3000";
+
+function showPage(page) {
+    document.querySelectorAll(".container").forEach(x => x.classList.add("hidden"));
+    document.getElementById(page).classList.remove("hidden");
+}
+
+async function signup() {
+    const user = document.getElementById("signup_id").value;
+    const pass = document.getElementById("signup_password").value;
+    const type = document.getElementById("signup_vehicle").value;
+
+    if (!user || !pass) {
+        document.getElementById("signup_msg").innerText = "Please fill all fields!";
+        return;
+    }
+
+    const res = await fetch(API+"/create", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ userId:user, password:pass, vehicleType:type })
+    });
+
+    const data = await res.json();
+    document.getElementById("signup_msg").innerText = data.error || data.message;
+
+    if (data.success) {
+        setTimeout(() => {
+            document.getElementById("signup_id").value = "";
+            document.getElementById("signup_password").value = "";
+            showPage("loginPage");
+        }, 1500);
+    }
+}
+
+async function login() {
+    const id = document.getElementById("login_id").value;
+    const pass = document.getElementById("login_password").value;
+
+    if (!id || !pass) {
+        document.getElementById("login_msg").innerText = "Please enter ID and password!";
+        return;
+    }
+
+    const res = await fetch(API+"/login", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ userId:id, password:pass })
+    });
+
+    const data = await res.json();
+    document.getElementById("login_msg").innerText = data.error || "Login Successful!";
+
+    if (data.success) {
+        userId = id;
+        document.getElementById("navLogin").classList.add("hidden");
+        document.getElementById("navSignup").classList.add("hidden");
+        document.getElementById("navLogout").classList.remove("hidden");
+        showPage("slotPage");
+        loadSlots();
+    }
+}
+
+function logout() {
+    userId = null;
+    selectedSlot = null;
+    document.getElementById("selectedSlot").innerText = "None";
+    document.getElementById("navLogin").classList.remove("hidden");
+    document.getElementById("navSignup").classList.remove("hidden");
+    document.getElementById("navLogout").classList.add("hidden");
+    showPage("loginPage");
+}
+
+async function loadSlots() {
+    const res = await fetch(API+"/slots");
+    const slots = await res.json();
+
+    document.getElementById("slot2w").innerHTML = "";
+    document.getElementById("slot4w").innerHTML = "";
+
+    slots.forEach(s => {
+        let div = document.createElement("div");
+        div.className = "slot";
+        div.innerText = s.slot_no;
+
+        if (s.userId === userId) div.classList.add("user-slot");
+        else if (s.userId) div.classList.add("booked");
+
+        div.onclick = (e) => selectSlot(e, s);
+
+        if (s.type === "2W") document.getElementById("slot2w").appendChild(div);
+        else document.getElementById("slot4w").appendChild(div);
+    });
+}
+
+function selectSlot(e, slot) {
+    if (slot.userId && slot.userId !== userId) return;
+    
+    selectedSlot = slot;
+    document.querySelectorAll(".slot").forEach(s => s.classList.remove("selected-slot"));
+    e.target.classList.add("selected-slot");
+    document.getElementById("selectedSlot").innerText = slot.slot_no;
+}
+
+function getDbKey(slot) {
+    const [type, num] = slot.slot_no.split("-");
+    return `${type}_${num}`;
+}
+
+async function bookSlot() {
+    if (!selectedSlot) {
+        document.getElementById("slot_msg").innerText = "⚠️ No slot selected!";
+        return;
+    }
+
+    const slotKey = getDbKey(selectedSlot);
+
+    const res = await fetch(API+"/slot/book", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ userId, slot_no: slotKey })
+    });
+
+    const data = await res.json();
+    document.getElementById("slot_msg").innerText = data.error || `✅ Slot Booked! Token: ${data.token}`;
+    loadSlots();
+}
+
+async function releaseSlot() {
+    const res = await fetch(API+"/slot/release", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ userId })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        document.getElementById("slot_msg").innerHTML = `
+            <div class="cost-breakdown">
+                <div class="cost-item">Slot Released: <strong>${data.slot_no}</strong></div>
+                <div class="cost-item">Token: <strong>${data.token}</strong></div>
+                <div class="cost-item">Parked Hours: <strong>${data.parked_hours}</strong></div>
+                <div class="cost-item">Rate/Hour: <strong>₹${data.rate}</strong></div>
+                <div class="cost-item">Total Cost: <strong>₹${data.cost}</strong></div>
+            </div>
+        `;
+    } else {
+        document.getElementById("slot_msg").innerText = data.error || "Error releasing slot";
+    }
+
+    loadSlots();
+}
+</script>
+
+</body>
+</html>
