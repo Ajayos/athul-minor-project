@@ -1,0 +1,34 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* enable proper scrolling */
+body {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #f10000; /* or #fff */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* prevent layout shift issues */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* optional: smoother scrolling */
+html {
+  scroll-behavior: smooth;
+}
