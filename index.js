@@ -13,13 +13,11 @@ const nodedb = new DB(dbPath);
 
 // ========================= INIT DB ===========================
 async function initDB() {
-
   if (!(await nodedb.getDB("users"))) {
     await nodedb.setDB("users", "init", { ok: true });
   }
 
   if (!(await nodedb.getDB("slots"))) {
-
     // 10 TWO WHEELER SLOTS
     for (let i = 1; i <= 10; i++) {
       await nodedb.setDB("slots", `2W_${i}`, {
@@ -28,7 +26,7 @@ async function initDB() {
         userId: null,
         start: null,
         token: null,
-        evStart: null,      // EV charging start time (optional)
+        evStart: null, // EV charging start time (optional)
         evActive: false,
       });
     }
@@ -65,7 +63,7 @@ app.post("/create", async (req, res) => {
     userId,
     password,
     vehicleType,
-    bookedSlot: null
+    bookedSlot: null,
   });
 
   res.json({ success: true, message: "Account created!" });
@@ -113,19 +111,19 @@ app.post("/slot/book", async (req, res) => {
     start,
     token,
     evStart: null,
-    evActive: false
+    evActive: false,
   });
 
   await nodedb.setDB("users", userId, {
     ...user,
-    bookedSlot: slot_no
+    bookedSlot: slot_no,
   });
 
   res.json({
     success: true,
     slot_no: slot.slot_no,
     token,
-    message: "Parking slot booked!"
+    message: "Parking slot booked!",
   });
 });
 
@@ -147,7 +145,7 @@ app.post("/slot/ev/start", async (req, res) => {
   await nodedb.setDB("slots", user.bookedSlot, {
     ...slot,
     evStart: Date.now(),
-    evActive: true
+    evActive: true,
   });
 
   res.json({ success: true, message: "EV charging started!" });
@@ -182,7 +180,7 @@ app.post("/slot/ev/stop", async (req, res) => {
     hours,
     evRate,
     evCost,
-    message: "EV charging stopped"
+    message: "EV charging stopped",
   });
 });
 
@@ -215,13 +213,13 @@ app.post("/slot/release", async (req, res) => {
     start: null,
     token: null,
     evActive: false,
-    evStart: null
+    evStart: null,
   });
 
   // Clear user
   await nodedb.setDB("users", userId, {
     ...user,
-    bookedSlot: null
+    bookedSlot: null,
   });
 
   res.json({
@@ -233,7 +231,7 @@ app.post("/slot/release", async (req, res) => {
     parkingCost,
     evCost,
     total: parkingCost + evCost,
-    message: "Parking slot released"
+    message: "Parking slot released",
   });
 });
 
