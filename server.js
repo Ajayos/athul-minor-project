@@ -13,7 +13,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://192.168.1.4:5173",
+    origin: "*",
     credentials: true,
   }),
 );
