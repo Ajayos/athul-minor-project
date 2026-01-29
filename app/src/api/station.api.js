@@ -5,4 +5,5 @@ export const StationAPI = {
   create: (data) => api.post("/stations", data),
   update: (id, data) => api.put(`/stations/${id}`, data),
   remove: (id) => api.delete(`/stations/${id}`),
+  getAllUser: () => api.get("/auth/users"),
 };
