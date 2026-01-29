@@ -1,49 +1,44 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  TextField,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Alert,
-  Snackbar,
-  useTheme,
-  styled,
-  Avatar,
-  Fab,
-  Zoom,
-  Divider,
-  Tooltip,
-} from "@mui/material";
-import {
-  Add,
-  Edit,
-  Delete,
-  Refresh,
-  Search,
-  DirectionsCar,
-  TwoWheeler,
-  EvStation,
-  LocationOn,
-  KeyboardArrowUp,
-} from "@mui/icons-material";
+import { useTheme, styled } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Avatar from '@mui/material/Avatar';
+import Fab from '@mui/material/Fab';
+import Zoom from '@mui/material/Zoom';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SearchIcon from '@mui/icons-material/Search';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
+import EvStationIcon from '@mui/icons-material/EvStation';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import StationDialog from "./StationDialog";
 import { StationAPI } from "../../api/station.api";
 
 /* ================= FILTERS ================= */
 
 const FILTERS = [
-  { key: "all", label: "All", icon: <Search /> },
-  { key: "2w", label: "2W", icon: <TwoWheeler /> },
-  { key: "4w", label: "4W", icon: <DirectionsCar /> },
-  { key: "ev", label: "EV", icon: <EvStation /> },
+  { key: "all", label: "All", icon: <SearchIcon /> },
+  { key: "2w", label: "2W", icon: <TwoWheelerIcon /> },
+  { key: "4w", label: "4W", icon: <DirectionsCarIcon /> },
+  { key: "ev", label: "EV", icon: <EvStationIcon /> },
 ];
 
 /* ================= STYLES ================= */
@@ -137,10 +132,34 @@ export default function StationList() {
     type: "success",
   });
 
-  const loadStations = async () => {
+  const loadStations = async (out) => {
+    console.log(out, "out-")
+    if(out){
+      await StationAPI.create(out)
+    }
+
     const res = await StationAPI.getAll();
     setStations(res.data || []);
   };
+
+  const removeStation = async () => {
+    try {
+      await StationAPI.remove(deleteBox._id);
+      setSnackbar({
+        open: true,
+        msg: "Station deleted successfully",
+        type: "success",
+      });
+      setDeleteBox(null);
+      loadStations();
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        msg: "Failed to delete station",
+        type: "error",
+      });
+    }
+  }
 
   useEffect(() => {
     loadStations();
@@ -181,11 +200,11 @@ export default function StationList() {
           <Box display="flex" gap={1}>
             <Tooltip title="Refresh">
               <IconButton onClick={loadStations}>
-                <Refresh />
+                <RefreshIcon />
               </IconButton>
             </Tooltip>
             <Button
-              startIcon={<Add />}
+              startIcon={<AddIcon />}
               variant="contained"
               onClick={() => setOpen(true)}
             >
@@ -207,7 +226,7 @@ export default function StationList() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             InputProps={{
-              startAdornment: <Search fontSize="small" />,
+              startAdornment: <SearchIcon fontSize="small" />,
             }}
           />
 
@@ -234,14 +253,14 @@ export default function StationList() {
               <CardContent sx={{ flexGrow: 1 }}>
                 <CardHeader>
                   <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
-                    <DirectionsCar />
+                    <DirectionsCarIcon />
                   </Avatar>
                   <Box minWidth={0}>
                     <Typography fontWeight={700} noWrap>
                       {s.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      <LocationOn fontSize="small" /> {s.place}
+                      <LocationOnIcon fontSize="small" /> {s.place}
                     </Typography>
                   </Box>
                 </CardHeader>
@@ -252,7 +271,7 @@ export default function StationList() {
                   {s.twoW?.enabled && <Chip size="small" label="2W" />}
                   {s.fourW?.enabled && <Chip size="small" label="4W" />}
                   {(s.twoW?.ev || s.fourW?.ev) && (
-                    <Chip size="small" icon={<EvStation />} label="EV" />
+                    <Chip size="small" icon={<EvStationIcon />} label="EV" />
                   )}
                 </Box>
               </CardContent>
@@ -264,10 +283,10 @@ export default function StationList() {
                     setOpen(true);
                   }}
                 >
-                  <Edit fontSize="small" /> Edit
+                  <EditIcon fontSize="small" /> Edit
                 </ActionBtn>
                 <ActionBtn color="error" onClick={() => setDeleteBox(s)}>
-                  <Delete fontSize="small" /> Delete
+                  <DeleteIcon fontSize="small" /> Delete
                 </ActionBtn>
               </Footer>
             </StationCard>
@@ -285,7 +304,7 @@ export default function StationList() {
             scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })
           }
         >
-          <KeyboardArrowUp />
+          <KeyboardArrowUpIcon />
         </Fab>
       </Zoom>
 
@@ -309,7 +328,7 @@ export default function StationList() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteBox(null)}>Cancel</Button>
-          <Button color="error" variant="contained">
+          <Button color="error" variant="contained" onClick={removeStation}>
             Delete
           </Button>
         </DialogActions>

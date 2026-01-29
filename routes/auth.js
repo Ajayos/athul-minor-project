@@ -109,4 +109,20 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out" });
 });
 
+
+router.get("/users", auth, async (req, res) => {
+  try {
+    // Only allow admin users to access this route
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (err) {
+    console.error("GET USERS ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
