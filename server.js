@@ -10,10 +10,12 @@ connectDB();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: "http://192.168.1.22:5174",
+    origin: "*",
     credentials: true,
   }),
 );
@@ -25,7 +27,7 @@ app.use("/api/bookings", require("./routes/booking"));
 
 
 app.get("/", (_, res) => {
-  res.send("Parking System API running");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
